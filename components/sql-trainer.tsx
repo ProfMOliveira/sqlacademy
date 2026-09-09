@@ -72,7 +72,8 @@ export default function SqlTrainer(){
  function saveName(){const name=nameDraft.trim();if(!name)return;setUserName(name);localStorage.setItem('sql-trainer-progress',JSON.stringify({lessons:completedLessons,exercises:completedExercises,xp,streak,userName:name}));setShowNameModal(false);}
  function resetProgress(){localStorage.removeItem('sql-trainer-progress');setCompletedLessons([]);setCompletedExercises([]);setXp(0);setStreak(1);setShowCertificate(false);setShowNameModal(true);}
 
- return <div className="min-h-screen bg-[#070b14] text-slate-100 flex flex-col">
+ return (
+  <div className="min-h-screen bg-[#070b14] text-slate-100 flex flex-col">
   <header className="h-16 border-b border-[#243149] bg-[#0a101c] flex items-center justify-between px-4 md:px-6 sticky top-0 z-30"><div className="flex items-center gap-3"><button className="md:hidden p-2 rounded-lg bg-[#111b2d]" onClick={()=>setMobile(!mobile)}>{mobile?<X size={19}/>:<Menu size={19}/>}</button><div className="h-9 w-9 rounded-xl bg-indigo-500/15 border border-indigo-400/20 flex items-center justify-center"><DbIcon size={19} className="text-indigo-300"/></div><div><div className="font-bold">SQL Academy</div><div className="text-[11px] text-slate-500">Plataforma de treinamento SQL</div></div></div><div className="flex items-center gap-4"><div className="hidden sm:flex items-center gap-2 text-xs"><Flame size={15} className="text-orange-400"/> {streak} dia(s)</div><div className="hidden sm:block w-36 h-2 bg-[#1b2638] rounded-full overflow-hidden"><div className="h-full bg-indigo-400" style={{width:`${percent}%`}}/></div><div className="text-xs text-indigo-200 font-bold">{xp} XP</div></div></header>
   <div className="flex flex-1 min-h-0 relative">
    <aside className={`${mobile?'absolute inset-y-0 left-0 z-20':'hidden'} md:flex w-80 shrink-0 border-r border-[#243149] bg-[#0a101c] flex-col`}>
@@ -139,15 +140,19 @@ export default function SqlTrainer(){
     <div className="no-print flex justify-center gap-2 mt-8"><button onClick={()=>window.print()} className="rounded-lg bg-amber-400 text-slate-950 px-4 py-2 font-semibold">Imprimir / PDF</button><button onClick={()=>setShowCertificate(false)} className="rounded-lg border border-[#2a3852] px-4 py-2">Fechar</button></div>
    </div>
   </div>}
-  {showNameModal && <div className="fixed inset-0 z-[60] bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-   <div className="w-full max-w-md rounded-2xl border border-indigo-400/30 bg-[#101827] shadow-2xl p-6">
-    <div className="h-12 w-12 rounded-xl bg-indigo-500/15 flex items-center justify-center text-indigo-300"><GraduationCap size={24}/></div>
-    <h2 className="text-xl font-bold mt-5">Bem-vindo à SQL Academy</h2>
-    <p className="text-sm text-slate-400 mt-2 leading-6">Informe seu nome. Ele será usado no certificado de conclusão quando você finalizar a trilha.</p>
-    <input autoFocus value={nameDraft} onChange={e=>setNameDraft(e.target.value)} onKeyDown={e=>{if(e.key==='Enter')saveName();}} placeholder="Digite seu nome completo" className="mt-5 w-full rounded-lg bg-[#0a101c] border border-[#2a3852] px-3 py-3 text-sm outline-none focus:border-indigo-400"/>
-    <button onClick={saveName} disabled={!nameDraft.trim()} className="mt-4 w-full rounded-lg bg-indigo-500 hover:bg-indigo-400 disabled:opacity-40 px-4 py-3 text-sm font-semibold">Continuar</button>
+  {showNameModal && (
+   <div className="fixed inset-0 z-[60] bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+    <div className="w-full max-w-md rounded-2xl border border-indigo-400/30 bg-[#101827] shadow-2xl p-6">
+     <div className="h-12 w-12 rounded-xl bg-indigo-500/15 flex items-center justify-center text-indigo-300"><GraduationCap size={24}/></div>
+     <h2 className="text-xl font-bold mt-5">Bem-vindo à SQL Academy</h2>
+     <p className="text-sm text-slate-400 mt-2 leading-6">Informe seu nome. Ele será usado no certificado de conclusão quando você finalizar a trilha.</p>
+     <input autoFocus value={nameDraft} onChange={e=>setNameDraft(e.target.value)} onKeyDown={e=>{if(e.key==='Enter')saveName();}} placeholder="Digite seu nome completo" className="mt-5 w-full rounded-lg bg-[#0a101c] border border-[#2a3852] px-3 py-3 text-sm outline-none focus:border-indigo-400"/>
+     <button onClick={saveName} disabled={!nameDraft.trim()} className="mt-4 w-full rounded-lg bg-indigo-500 hover:bg-indigo-400 disabled:opacity-40 px-4 py-3 text-sm font-semibold">Continuar</button>
+    </div>
    </div>
-  </div>}
+  )}
+  </div>
+ );
 }
 
 function ResultPanel({cols,rows,error,message}:{cols:string[];rows:Row[];error:boolean;message:string}){return <section className="rounded-2xl border border-[#243149] bg-[#0d1422] overflow-hidden"><div className="h-12 border-b border-[#243149] flex items-center justify-between px-4"><div className="flex items-center gap-2"><Table2 size={16} className="text-emerald-300"/><span className="font-semibold text-sm">Resultado</span></div><span className={`text-xs ${error?'text-red-300':'text-slate-500'}`}>{message}</span></div><div className="min-h-[380px] overflow-auto">{error?<div className="m-4 rounded-xl border border-red-500/20 bg-red-500/10 p-4 flex gap-3"><AlertCircle className="text-red-300" size={18}/><div><div className="font-semibold text-red-200">Erro SQL</div><div className="text-sm text-red-200/70 mt-1 font-mono whitespace-pre-wrap">{message}</div></div></div>:cols.length?<table className="w-full text-sm"><thead className="bg-[#111b2d] sticky top-0"><tr>{cols.map(c=><th key={c} className="text-left px-4 py-3 border-b border-[#243149] text-slate-400 font-medium">{c}</th>)}</tr></thead><tbody>{rows.map((r,i)=><tr key={i} className="border-b border-[#1b2638]">{cols.map(c=><td key={c} className="px-4 py-3 text-slate-200 font-mono text-xs">{r[c]===null?<span className="text-slate-600">NULL</span>:String(r[c])}</td>)}</tr>)}</tbody></table>:<div className="h-[380px] flex flex-col items-center justify-center text-slate-500"><Terminal size={28} className="mb-3 opacity-40"/><p className="text-sm">Execute uma consulta para ver os dados.</p></div>}</div></section>}
