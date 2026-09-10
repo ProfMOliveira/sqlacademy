@@ -12,7 +12,7 @@
     max-width: none !important; min-height: 0 !important; margin: 0 !important;
     border: 8px solid #c89b3c !important; border-radius: 0 !important; box-shadow: none !important;
     background: white !important; color: #172033 !important; padding: 24mm 20mm !important;
-    page-break-after: avoid !important; break-after: avoid-page !important;
+    page-break-after: avoid !important; break-after: avoid-page !important; overflow: hidden !important;
   }
   .certificate .text-slate-400, .certificate .text-slate-500 { color: #536174 !important; }
   .certificate .text-white { color: #172033 !important; }
